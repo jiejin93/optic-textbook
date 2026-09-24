@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 3 章 傅里叶分析 · 掩模版光学仿真与缺陷检测（试读版）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+ onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});"></script>
+<style>.trial-banner{background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:.7em 1em;margin:0 0 1.5em;font-size:.95em}</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc"><div class="title">掩模光学仿真<br><span style="font-size:.6em">免费试读版</span></div>
+<a href="preface.html">前言</a><a href="ch01.html">第 1 章 绪论：从一张掩模照片说起</a><a href="ch02.html">第 2 章 复数与波动的数学</a><a href="ch03.html" class="active">第 3 章 傅里叶分析</a><a href="ch04.html">第 4 章 线性系统、卷积与采样</a>
+<div class="part">完整版</div>
+<a href="https://github.com/jiejin93/optic-textbook">GitHub 仓库 / 完整目录</a>
+</nav>
+<main>
+<div class="trial-banner">📚 当前为免费试读版（前言 + 第 1–4 章）· 完整版四篇十九章 + 七附录见 <a href="https://github.com/jiejin93/optic-textbook" target="_blank">GitHub 仓库</a></div>
+<h1>第 3 章 傅里叶分析</h1>
+
+<div class="objectives"><strong>本章学习目标</strong>
+<ul>
+<li>理解"任意图形可分解为正弦波叠加"的傅里叶思想；</li>
+<li>掌握一维/二维傅里叶变换的定义、性质与常用变换对；</li>
+<li>理解空间频率与衍射方向的物理对应；</li>
+<li>掌握傅里叶级数与离散情况（为第 4 章做准备）。</li>
+</ul></div>
+
+<h2>3.1 傅里叶思想：一切图形都是正弦波的叠加</h2>
+
+<p>先看一维情形。方波、三角波、掩模上一排明暗相间的线条——这些形状各异的函数，都可以表示成一系列不同频率正弦波的加权和：</p>
+$$ f(x) = \frac{a_0}{2} + \sum_{m=1}^{\infty}\Big[a_m\cos(2\pi m f_0 x) + b_m\sin(2\pi m f_0 x)\Big] $$
+<p>其中 \(f_0 = 1/p\) 是基频（\(p\) 为周期），这是<strong>傅里叶级数</strong>。周期函数的谱是<strong>离散</strong>的：只含 \(f_0\) 的整数倍（谐波）。用欧拉公式可以把级数统一写成复指数形式：</p>
+$$ f(x) = \sum_{m=-\infty}^{\infty} c_m\,e^{i2\pi m f_0 x},\qquad
+c_m = \frac{1}{p}\int_{-p/2}^{p/2} f(x)\,e^{-i2\pi m f_0 x}\,dx $$
+<p>系数 \(c_m\)（复数）携带每个谐波的幅度与相位。<strong>类比掩模</strong>：周期 \(p\) 的光栅在线性系统中的行为，完全由这些离散的衍射级次决定——第 8 章将看到，\(m\) 级衍射方向恰好满足 \(\sin\theta_m = m\lambda/p\)，傅里叶系数就是衍射级的复振幅（比例因子除外）。</p>
+
+<figure>
+<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Microsoft YaHei" font-size="12" fill="#25476a">
+<path d="M30,105 L70,105 L70,45 L130,45 L130,105 L190,105 L190,45 L250,45 L250,105 L310,105 L310,45 L370,45 L370,105 L430,105 L430,45 L490,45 L490,105 L550,105 L550,45 L610,45" fill="none" stroke="#25476a" stroke-width="2"/>
+<path d="M30,105 C45,95 55,95 70,105 C85,115 95,115 110,105 C125,95 135,95 150,105 C165,115 175,115 190,105 C205,95 215,95 230,105 C245,115 255,115 270,105 C285,95 295,95 310,105 C325,115 335,115 350,105 C365,95 375,95 390,105 C405,115 415,115 430,105 C445,95 455,95 470,105 C485,115 495,115 510,105 C525,95 535,95 550,105 C565,115 575,115 590,105 C605,95 615,95 630,105" fill="none" stroke="#8fa8c4" stroke-width="1.2"/>
+<path d="M30,75 C55,55 85,55 110,75 C135,95 165,95 190,75 C215,55 245,55 270,75 C295,95 325,95 350,75 C375,55 405,55 430,75 C455,95 485,95 510,75 C535,55 565,55 590,75" fill="none" stroke="#b03a2e" stroke-width="1.6"/>
+<text x="320" y="140" text-anchor="middle">方波（深蓝） = 基频（红）+ 3 次谐波（浅蓝）+ 5 次谐波 + …</text>
+<text x="320" y="185" text-anchor="middle" fill="#5a6b7d">叠加的谐波越多，越接近陡峭的方波；永远过冲的吉布斯现象约 9%</text>
+</g>
+</svg>
+<figcaption>图 3-1 傅里叶合成：方波由正弦谐波逐级叠加逼近。掩模的陡峭边缘同样由大量高频成分构成。</figcaption>
+</figure>
+
+<h2>3.2 傅里叶变换：非周期函数的连续谱</h2>
+
+<p>当函数不再周期重复（比如掩模上孤立的缺陷），谐波间隔趋于无穷小，级数变成积分，即<strong>傅里叶变换</strong>：</p>
+$$ F(f) = \int_{-\infty}^{\infty} f(x)\,e^{-i2\pi f x}\,dx \qquad\text{（正变换）} $$
+$$ f(x) = \int_{-\infty}^{\infty} F(f)\,e^{+i2\pi f x}\,df \qquad\text{（逆变换）} $$
+<p>读法：\(F(f)\) 给出频率为 \(f\)（单位：周期/长度）的正弦分量有多大、相位如何；逆变换把所有正弦波重新加起来还原 \(f(x)\)。\(f\) 称<strong>空间频率</strong>，与角空间频率 \(k_x = 2\pi f\) 只差一个 \(2\pi\)。</p>
+
+<p>二维推广（掩模是二维图形，必须用二维变换）：</p>
+$$ F(f_x,f_y) = \iint f(x,y)\,e^{-i2\pi(f_x x + f_y y)}\,dx\,dy $$
+<p>其中 \(e^{i2\pi(f_xx+f_yy)}\) 是沿方向 \(\hat{\mathbf{s}}\propto(\lambda f_x, \lambda f_y)\) 传播的平面波（第 8 章证明）。<strong>掩模频谱的每个点，对应一个衍射方向</strong>——这是"掩模 → 衍射"物理问题与"图形 → 频谱"数学问题等价的关键。</p>
+
+<h3>3.2.1 常用变换对（必须熟记）</h3>
+
+<table>
+<tr><th>空间域 \(f(x)\)</th><th>频域 \(F(f)\)</th><th>光学对应</th></tr>
+<tr><td>常数 1</td><td>\(\delta(f)\)</td><td>均匀照明只有零级（直射光）</td></tr>
+<tr><td>\(\delta(x)\)</td><td>常数 1</td><td>点源向所有方向辐射</td></tr>
+<tr><td>宽 \(a\) 的矩形 \(\mathrm{rect}(x/a)\)</td><td>\(a\,\mathrm{sinc}(af) = a\frac{\sin(\pi a f)}{\pi a f}\)</td><td>单缝衍射包络</td></tr>
+<tr><td>周期 \(p\) 的 \(\delta\) 梳</td><td>间隔 \(1/p\) 的 \(\delta\) 梳</td><td>光栅 → 离散衍射级</td></tr>
+<tr><td>高斯 \(e^{-\pi x^2}\)</td><td>高斯 \(e^{-\pi f^2}\)</td><td>高斯光束</td></tr>
+<tr><td>\(e^{i\pi\alpha x^2}\)（二次相位）</td><td>\(\frac{1}{\sqrt{\alpha}}e^{i\pi/4}e^{-i\pi f^2/\alpha}\)</td><td>菲涅尔衍射核/透镜相位</td></tr>
+<tr><td>\(f(x-x_0)\)（平移）</td><td>\(F(f)e^{-i2\pi f x_0}\)（线性相位）</td><td>图形平移只改各级相位</td></tr>
+</table>
+
+<p>对偶规律（记住可推一大片）：<strong>空域窄 ↔ 频域宽</strong>；<strong>空域周期化 ↔ 频域离散化</strong>；<strong>空域离散化 ↔ 频域周期化</strong>（第 4 章 DFT 的根源）。</p>
+
+<h3>3.2.2 基本性质的推导要点</h3>
+
+<p>以平移性质为例展示推导风格（其余性质建议读者自行仿证）：</p>
+$$ \mathcal{F}\{f(x-x_0)\} = \int f(x-x_0)e^{-i2\pi fx}dx \;\xrightarrow{\;u=x-x_0\;}\; \int f(u)e^{-i2\pi f(u+x_0)}du = F(f)\,e^{-i2\pi f x_0} $$
+<p>其他常用性质（\(a\neq0\)）：</p>
+$$ \mathcal{F}\{f(ax)\} = \frac{1}{|a|}F\!\left(\frac{f}{a}\right)\ (\text{尺度伸缩}),\quad
+\mathcal{F}\{f^*(x)\} = F^*(-f)\ (\text{共轭}),\quad
+\mathcal{F}\{f(-x)\} = F(-f) $$
+$$ \mathcal{F}\{\mathcal{F}\{f(x)\}\} = f(-x),\qquad
+f(0) = \int F(f)\,df,\qquad F(0) = \int f(x)\,dx $$
+
+<h3>3.2.3 δ 函数：有用的"理想化"工具</h3>
+
+<p>狄拉克 δ 函数是"无限窄、面积 1"的尖峰：\(\delta(x)=0\ (x\neq0)\)，\(\int\delta(x)dx=1\)。核心性质是筛选：</p>
+$$ \int f(x)\,\delta(x-x_0)\,dx = f(x_0),\qquad f(x)\delta(x-x_0) = f(x_0)\delta(x-x_0) $$
+<p>光学中点光源、无限薄透镜、理想像素都用 δ 建模；第 10 章点扩散函数的定义也依赖它。</p>
+
+<h2>3.3 卷积与相关</h2>
+
+<p>两个函数的<strong>卷积</strong>定义为</p>
+$$ (f*g)(x) = \int_{-\infty}^{\infty} f(\xi)\,g(x-\xi)\,d\xi $$
+<p>直觉解释：把 \(g\) 翻转、平移 \(x\)，与 \(f\) 逐点相乘再积分——即"<strong>用 \(g\) 作为权重对 \(f\) 做局部加权平均</strong>"。成像正是这个过程：点扩散函数把物的每一点抹成一个小斑，像 = 物 ⊛ 点扩散函数（第 10 章）。</p>
+
+<p><strong>卷积定理</strong>（全书使用频率最高的定理）：</p>
+$$ \boxed{\ \mathcal{F}\{f*g\} = F\cdot G,\qquad \mathcal{F}\{f\cdot g\} = F*G\ } $$
+<p>证明思路（交换积分次序即可）：</p>
+$$ \iint f(\xi)g(x-\xi)e^{-i2\pi fx}\,d\xi dx = \int f(\xi)e^{-i2\pi f\xi}\Big[\int g(x-\xi)e^{-i2\pi f(x-\xi)}dx\Big]d\xi = F(f)\,G(f) $$
+<p>它说明：<strong>空域卷积 ⇄ 频域乘法</strong>。整个成像仿真架构（掩模谱 × 光瞳 → 逆变换）都建立在这条定理上。</p>
+
+<p>卷积的常用性质：</p>
+$$ f*g = g*f,\qquad f*(g*h) = (f*g)*h,\qquad f*\delta(x-x_0) = f(x-x_0),\qquad \int(f*g)dx = \Big(\int f\Big)\Big(\int g\Big) $$
+
+<p><strong>互相关</strong>与卷积相似但翻转符号不同：</p>
+$$ (f\star g)(u) = \int f^*(x)\,g(x+u)\,dx,\qquad \mathcal{F}\{f\star g\} = F^*\,G $$
+<p>互相关衡量"把 \(g\) 平移 \(u\) 后与 \(f\) 有多像"，在 \(f=g\)（自相关）且平移为零时达到峰值。第 18 章的图像配准（找实拍图与参考图之间的平移量）正是靠互相关峰定位。</p>
+
+<h2>3.4 Parseval 定理与带宽</h2>
+
+<p>把逆变换代入模方积分并交换次序，得</p>
+$$ \int|f(x)|^2dx = \int|F(f)|^2df $$
+<p>即<strong> Parseval 定理</strong>：能量在空域与频域的计量一致。\( |F(f)|^2 \) 称为功率谱。它给仿真的重要启示：光瞳裁掉 \(|f|&gt;NA/\lambda\) 的频段，等于裁掉这部分"能量"，被裁能量占比越大，像与物差别越大。</p>
+
+<p><strong>带宽</strong>：若 \(F(f)\) 仅在 \(|f|\le B\) 内非零，称 \(f\) 带限于 \(B\)。宽度为 \(a\) 的矩形孔频谱是 sinc，严格意义上无限宽——不存在严格带限的"有界图形"。这决定了成像永远有信息丢失，也决定了第 4 章采样网格必须精细（图形越小、频谱越宽）。</p>
+
+<h2>3.5 动手实验：用 Python 观察频谱</h2>
+
+<pre><code>import numpy as np
+import matplotlib.pyplot as plt
+
+N, dx = 512, 0.01                      # 5.12 µm 视场，10 nm 网格
+x = (np.arange(N) - N/2) * dx
+X, Y = np.meshgrid(x, x)
+
+# 掩模：0.5 µm × 1.0 µm 的矩形孔
+mask = ((np.abs(X) &lt; 0.25) &amp; (np.abs(Y) &lt; 0.5)).astype(float)
+
+F = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(mask)))
+fx = np.fft.fftshift(np.fft.fftfreq(N, d=dx))
+
+fig, ax = plt.subplots(1, 2, figsize=(9, 4))
+ax[0].imshow(mask, cmap='gray');          ax[0].set_title('mask t(x,y)')
+ax[1].imshow(np.log1p(np.abs(F)), extent=[fx[0], fx[-1], fx[0], fx[-1]])
+ax[1].set_title('|F(fx,fy)| (log)'); plt.show()</code></pre>
+
+<p>运行后可观察：① 矩形孔谱是二维 sinc 十字，窄方向（0.5 µm）的谱宽、宽方向（1.0 µm）的谱窄——<strong>图形越小，频谱越宽，衍射越张角</strong>；② 把 mask 换成周期线条（光栅），谱变成离散点列，间隔正是 \(1/p\)；③ 把 mask 平移 0.1 µm，谱的模不变、只有相位变化——验证平移性质。</p>
+
+<h2>3.6 本章小结</h2>
+
+<ul>
+<li>傅里叶级数：周期函数 → 离散谐波；傅里叶变换：任意函数 → 连续谱。</li>
+<li>空间频率 \(f\) 与衍射方向一一对应，频域分析有直接物理意义。</li>
+<li>卷积定理：空域卷积 = 频域乘法，是成像仿真架构的基石。</li>
+<li>互相关用于配准；Parseval 保证能量守恒视角。</li>
+</ul>
+
+<div class="exercises"><strong>习题 3</strong>
+<ol>
+<li>求宽度 \(a\) 的矩形函数与自身卷积的结果（三角形），并用卷积定理验证其谱为 \(a^2\mathrm{sinc}^2(af)\)。</li>
+<li>周期 \(p\)、占空比 50% 的方波光栅，求其傅里叶级数系数 \(c_m\)，指出哪些级次为零。</li>
+<li>证明 \(\mathcal{F}\{f(ax)\} = \frac{1}{|a|}F(f/a)\)，并解释"图形缩小 k 倍，频谱展宽 k 倍"。</li>
+<li>用上面代码画出周期 0.4 µm 光栅的频谱，量出离散谱点间隔并与 \(1/p\) 比较。</li>
+</ol></div>
+
+<p class="refs">参考：Bracewell《The Fourier Transform and Its Applications》；Goodman《Introduction to Fourier Optics》第 2 章。</p>
+
+<div class="pager"><a href="ch02.html">← 上一页</a><a href="ch04.html">下一页 →</a></div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<h1>第 1 章 绪论：从一张掩模照片说起</h1>
+
+<div class="objectives"><strong>本章学习目标</strong>
+<ul>
+<li>理解光刻掩模在半导体制造中的角色；</li>
+<li>理解掩模缺陷检测三种模式，特别是 die-to-database 的原理与难点；</li>
+<li>建立"光源 → 掩模衍射 → 镜头成像 → 相机采样"的成像链路物理图像；</li>
+<li>了解全书结构与学习方法。</li>
+</ul></div>
+
+<h2>1.1 掩模版：芯片图形的母版</h2>
+
+<p>现代芯片的制造，本质上是把设计好的电路图形一层一层"印"到硅片上，这个过程叫<strong>光刻</strong>（lithography）。印刷用的"底片"就是<strong>光掩模</strong>（photomask，业内常称掩模版）：一块 6 英寸见方的熔融石英（fused silica）基板，上面用铬膜刻出与电路层对应的图形。投影式光刻机用紫外光照射掩模，透过掩模的光经过一组精密透镜，把图形缩小 4 倍后投射到晶圆表面的光刻胶上，曝光、显影之后，图形就转移到了晶圆上。一层芯片图形需要一张掩模，一枚先进芯片要几十层掩模，任何一张掩模上的缺陷都会被复制到成千上万颗芯片上——这就是掩模缺陷检测如此重要的原因。</p>
+
+<figure>
+<svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Microsoft YaHei" font-size="13" fill="#25476a" text-anchor="middle">
+<rect x="20" y="25" width="200" height="30" rx="4" fill="#eef3f9" stroke="#8fa8c4"/>
+<text x="120" y="45">紫外光源（平行照明）</text>
+<rect x="60" y="80" width="120" height="80" fill="#ffffff" stroke="#8fa8c4"/>
+<rect x="80" y="95" width="14" height="50" fill="#25476a"/>
+<rect x="108" y="95" width="34" height="12" fill="#25476a"/>
+<rect x="108" y="133" width="34" height="12" fill="#25476a"/>
+<rect x="152" y="95" width="14" height="50" fill="#25476a"/>
+<text x="120" y="180" font-size="12">掩模（4× 图形）</text>
+<g stroke="#b03a2e" stroke-width="1.4" fill="none">
+<line x1="90" y1="160" x2="270" y2="112"/>
+<line x1="120" y1="160" x2="300" y2="104"/>
+<line x1="150" y1="160" x2="330" y2="112"/>
+</g>
+<ellipse cx="355" cy="105" rx="14" ry="42" fill="#fff" stroke="#25476a" stroke-width="2.5"/>
+<ellipse cx="385" cy="105" rx="14" ry="42" fill="#fff" stroke="#25476a" stroke-width="2.5"/>
+<text x="370" y="45">投影透镜组</text>
+<g stroke="#b03a2e" stroke-width="1.2" fill="none">
+<line x1="410" y1="98" x2="540" y2="103"/>
+<line x1="410" y1="108" x2="540" y2="106"/>
+</g>
+<rect x="545" y="80" width="130" height="50" rx="3" fill="#eef3f9" stroke="#8fa8c4"/>
+<rect x="585" y="92" width="4" height="26" fill="#25476a"/>
+<rect x="594" y="92" width="9" height="6" fill="#25476a"/>
+<rect x="594" y="112" width="9" height="6" fill="#25476a"/>
+<rect x="608" y="92" width="4" height="26" fill="#25476a"/>
+<text x="610" y="152" font-size="12">晶圆 + 光刻胶（1× 缩小像）</text>
+</g>
+</svg>
+<figcaption>图 1-1 投影光刻原理：照明光透过掩模，携带衍射信息进入投影透镜，在晶圆面上形成缩小的图形像。</figcaption>
+</figure>
+
+<p>掩模检测机（mask inspection tool）在结构上与光刻机非常相似：同样是光源照明掩模，同样用显微物镜成像，只是"像"不是投到光刻胶上，而是投到高速相机（TDI 相机）上，由计算机分析。理解了这一点就会明白：<strong>掩模检测本质上是一个成像问题，仿真它的核心是光学成像理论</strong>。</p>
+
+<h2>1.2 缺陷检测的三种模式</h2>
+
+<p>掩模检测机要回答的问题是："这张掩模和它应该有的样子差多少？"根据"应该有的样子"从哪里来，分为三种模式：</p>
+
+<table>
+<tr><th>模式</th><th>参考来源</th><th>优点</th><th>局限</th></tr>
+<tr><td>die-to-die<br>（芯片对芯片）</td><td>同一张掩模上相邻两个相同芯片单元，一个拍照当参考</td><td>无需仿真，设备成像链路自动一致，实现简单</td><td>要求版图高度重复；两个 die 同时损坏则漏检；不适用于逻辑芯片单 die 掩模</td></tr>
+<tr><td>die-to-database<br>（芯片对数据库）</td><td>设计版图 GDS 数据库，经光学仿真生成参考图</td><td>适用于任意图形；可检测单 die 掩模；参考图来自"完美设计"</td><td>必须精确复现成像物理，仿真误差会变成假缺陷</td></tr>
+<tr><td>array-to-image<br>（阵列对图像）</td><td>同一阵列中相邻周期单元互为参考</td><td>极快</td><td>只适合存储器类规则图形</td></tr>
+</table>
+
+<p>本书聚焦 die-to-database（下文简称 <strong>D2DB</strong>）。它的根本困难在于：<strong>参考图不是把版图涂黑涂白那么简单</strong>。检测机的照明方式、镜头孔径、光的衍射与干涉、掩模厚膜的电磁效应、相机的噪声，都会让真实照片呈现出版图上没有的灰度过渡和明暗细节。如果仿真忽略这些物理效应，差分图会充满系统性"假差异"，把真缺陷淹没。</p>
+
+<h2>1.3 成像链路：参考图仿真在仿真什么</h2>
+
+<p>把检测机拍照的过程拆开，光走过的每一步都必须被仿真：</p>
+
+<ol>
+<li><strong>光源</strong>：紫外灯或激光，经照明系统后在掩模面形成一定角谱分布的照明。描述它的参数是波长 \( \lambda \)（如 266 nm）和<strong>部分相干因子</strong> \( \sigma \)（照明锥角与物镜孔径角之比）。→ 第 7、11 章。</li>
+<li><strong>掩模</strong>：光穿过石英与铬膜构成的微纳图形，发生<strong>衍射</strong>；膜的三维结构还会引入相位与偏振效应。→ 第 8、13、16 章。</li>
+<li><strong>物镜光瞳</strong>：衍射光中只有落入物镜孔径（数值孔径 NA）的部分参与成像，高频信息被裁掉，这决定了分辨率。→ 第 9、10 章。</li>
+<li><strong>部分相干叠加</strong>：扩展光源各点独立成像，光强叠加。严格高效的算法是 Hopkins 理论与 TCC。→ 第 11、15 章。</li>
+<li><strong>相机</strong>：像素积分、量子噪声、读出噪声、灰度量化，把连续光强变成带噪声的数字图像。→ 第 17 章。</li>
+<li><strong>差分</strong>：参考图与实拍图配准、比较、判定。→ 第 18 章。</li>
+</ol>
+
+<figure>
+<svg viewBox="0 0 720 130" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="m1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#25476a"/></marker></defs>
+<g font-family="Microsoft YaHei" font-size="13" fill="#25476a" text-anchor="middle">
+<rect x="10" y="40" width="92" height="50" rx="7" fill="#eef3f9" stroke="#25476a"/><text x="56" y="60">光源</text><text x="56" y="78" fill="#5a6b7d" font-size="11">λ, σ</text>
+<line x1="104" y1="65" x2="130" y2="65" stroke="#25476a" stroke-width="2" marker-end="url(#m1)"/>
+<rect x="133" y="40" width="92" height="50" rx="7" fill="#eef3f9" stroke="#25476a"/><text x="179" y="60">掩模</text><text x="179" y="78" fill="#5a6b7d" font-size="11">衍射/相位</text>
+<line x1="227" y1="65" x2="253" y2="65" stroke="#25476a" stroke-width="2" marker-end="url(#m1)"/>
+<rect x="256" y="40" width="92" height="50" rx="7" fill="#eef3f9" stroke="#25476a"/><text x="302" y="60">光瞳</text><text x="302" y="78" fill="#5a6b7d" font-size="11">NA, 像差</text>
+<line x1="350" y1="65" x2="376" y2="65" stroke="#25476a" stroke-width="2" marker-end="url(#m1)"/>
+<rect x="379" y="40" width="92" height="50" rx="7" fill="#eef3f9" stroke="#25476a"/><text x="425" y="60">空间像</text><text x="425" y="78" fill="#5a6b7d" font-size="11">光强 I(x,y)</text>
+<line x1="473" y1="65" x2="499" y2="65" stroke="#25476a" stroke-width="2" marker-end="url(#m1)"/>
+<rect x="502" y="40" width="92" height="50" rx="7" fill="#eef3f9" stroke="#25476a"/><text x="548" y="60">相机</text><text x="548" y="78" fill="#5a6b7d" font-size="11">噪声/量化</text>
+<line x1="596" y1="65" x2="622" y2="65" stroke="#25476a" stroke-width="2" marker-end="url(#m1)"/>
+<rect x="625" y="40" width="88" height="50" rx="7" fill="#f9eeec" stroke="#b03a2e"/><text x="669" y="60" fill="#b03a2e">差分检测</text><text x="669" y="78" fill="#8a5450" font-size="11">实拍 − 参考</text>
+</g>
+</svg>
+<figcaption>图 1-2 检测机成像链路，也是本书的目录地图：每一章对应链路中的一个环节。</figcaption>
+</figure>
+
+<h2>1.4 一个直观的例子：为什么"涂黑白"不行</h2>
+
+<p>考虑掩模上一条宽 1 µm 的孤立铬线。按版图直接渲染的二值参考图，是黑白分明、边缘垂直的一条带。但真实照片里：</p>
+
+<ul>
+<li>衍射使边缘出现几十到几百纳米宽的灰度过渡带（过渡带宽度约为 \(0.5\lambda/NA\) 量级）；</li>
+<li>边缘两侧出现明暗过冲（类似数字信号处理中的振铃），这是相干成像的固有特征；</li>
+<li>照明部分相干度不同，过渡带形状随之改变；</li>
+<li>铬膜厚度引起的相位效应使边缘位置整体偏移几个纳米。</li>
+</ul>
+
+<p>如果参考图用"涂黑白"而实拍图带 200 nm 过渡带，差分结果在每条图形边缘都报警——整张图都是"缺陷"。反过来，一个真实的 50 nm 边缘凹坑，其差分信号只有过渡带差异的几分之一，会被假报警淹没。<strong>参考图仿真的全部意义，就是把上述四种物理效应定量地复现出来，使无缺陷区域的残差降到噪声水平</strong>。定量地理解并计算这些效应，正是本书的内容。</p>
+
+<h2>1.5 全书结构与学习方法</h2>
+
+<table>
+<tr><th>部分</th><th>章</th><th>内容</th><th>作用</th></tr>
+<tr><td rowspan="8">一、基础篇</td><td>2</td><td>复数与波动的数学</td><td rowspan="8">补齐数学与物理地基，零基础可学</td></tr>
+<tr><td>3</td><td>傅里叶分析</td></tr>
+<tr><td>4</td><td>线性系统、卷积与采样</td></tr>
+<tr><td>5</td><td>电磁场与光的波动理论</td></tr>
+<tr><td>6</td><td>光与物质相互作用</td></tr>
+<tr><td>7</td><td>干涉与相干性</td></tr>
+<tr><td>8</td><td>衍射理论</td></tr>
+<tr><td>1</td><td>绪论（本章）</td></tr>
+<tr><td rowspan="3">二、成像篇</td><td>9</td><td>透镜作为傅里叶变换机</td><td rowspan="3">建立成像系统的完整理论框架</td></tr>
+<tr><td>10</td><td>PSF、OTF 与分辨率</td></tr>
+<tr><td>11</td><td>部分相干成像：阿贝到 Hopkins</td></tr>
+<tr><td rowspan="6">三、仿真篇</td><td>12</td><td>掩模版工程与版图数据</td><td rowspan="6">D2DB 光学仿真的五个模块，全书重点</td></tr>
+<tr><td>13</td><td>模块一：栅格化与薄掩模</td></tr>
+<tr><td>14</td><td>模块二：Abbe 源点引擎</td></tr>
+<tr><td>15</td><td>模块三：Hopkins/TCC 引擎</td></tr>
+<tr><td>16</td><td>模块四：厚掩模矢量仿真</td></tr>
+<tr><td>17</td><td>模块五：渲染与设备标定</td></tr>
+<tr><td rowspan="2">四、应用篇</td><td>18</td><td>D2DB 检测算法全流程</td><td rowspan="2">从仿真走向检测产品</td></tr>
+<tr><td>19</td><td>综合实战与工程化</td></tr>
+<tr><td>附录</td><td>A/B/C</td><td>公式速查 · 术语对照 · 参考文献</td><td>工具性质</td></tr>
+</table>
+
+<div class="box"><strong>学习建议</strong>：全书约需 60–80 学时。数学物理部分（第 2–8 章）重理解，每章配少量习题；仿真篇（第 13–17 章）重实践，建议对照 Python 环境边读边写；每章末的小结与自测题用于检验掌握程度。书中蓝框是关键结论，红框是易错警告，请特别留意红框——它们几乎都是工程实践里真实发生过的错误。</div>
+
+<h2>1.6 本章小结</h2>
+
+<ul>
+<li>掩模是芯片图形的母版，其缺陷会被复制到所有芯片，故需 100% 检测。</li>
+<li>D2DB 用设计版图经光学仿真生成参考图，与实拍图差分找缺陷；其难点是精确复现成像物理。</li>
+<li>成像链路 = 光源 → 掩模衍射 → 光瞳 → 部分相干叠加 → 相机 → 差分，本书按此组织。</li>
+</ul>
+
+<div class="exercises"><strong>习题 1</strong>
+<ol>
+<li>调研你所在工厂/实验室的掩模检测设备，记录其检测波长、NA、照明模式与检测模式（D2D / D2DB）。</li>
+<li>用绘图软件画一个 1 µm 线宽图形的"涂黑白"参考图，与一张真实掩模照片对比，列出至少三处系统性差异。</li>
+<li>思考：如果检测机的照明从 σ=0.3 改为 σ=0.9，你预计掩模照片的边缘对比度会如何变化？读完第 11 章后回来验证你的判断。</li>
+</ol></div>
