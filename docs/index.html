@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>掩模版光学仿真与 die-to-database 缺陷检测 | 免费在线试读 · 波动光学/傅里叶/Abbe/Hopkins 教程</title>
+<meta name="description" content="《掩模版光学仿真与 die-to-database 缺陷检测》中文教材免费在线试读：从复数与傅里叶分析、衍射、阿贝成像到 Hopkins/TCC 仿真引擎与参考图渲染，四篇十九章+七附录，含 Python 数值实验。">
+<meta name="keywords" content="掩模版,光学仿真,缺陷检测,die-to-database,半导体,光刻,傅里叶光学,阿贝成像,Hopkins,TCC,中文教材,免费试读">
+<meta property="og:type" content="book">
+<meta property="og:title" content="掩模版光学仿真与 die-to-database 缺陷检测（免费试读）">
+<meta property="og:description" content="从波动光学基础到参考图渲染仿真的完整中文教程，四篇十九章，含可运行数值实验。">
+<meta property="og:url" content="https://jiejin93.github.io/optic-textbook/">
+<meta property="og:image" content="https://jiejin93.github.io/optic-textbook/cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://jiejin93.github.io/optic-textbook/">
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--ink:#1f2733;--muted:#68758222;--muted2:#6b7a89;--brand:#1f4e79;--brand2:#2d6bb2;--gold:#b98a1d;--line:#e7ebf0;--bg:#fbfcfd}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Microsoft YaHei","Noto Sans SC","PingFang SC",sans-serif;background:var(--bg);color:var(--ink);line-height:1.85;font-size:16.5px}
+a{color:var(--brand)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 1.6rem}
+
+/* ── hero ─────────────────────────────── */
+.hero{background:linear-gradient(180deg,#ffffff 0%,#f7f9fb 100%);border-bottom:1px solid var(--line)}
+.hero-grid{display:grid;grid-template-columns:340px 1fr;gap:3.6rem;align-items:center;padding:4rem 0 3.4rem}
+.cover{position:relative}
+.cover img{width:100%;display:block;border-radius:6px;box-shadow:0 18px 48px rgba(20,35,60,.18),0 3px 10px rgba(20,35,60,.10)}
+.cover::after{content:"";position:absolute;inset:0;border-radius:6px;border:1px solid rgba(255,255,255,.35);pointer-events:none}
+.kicker{letter-spacing:.35em;font-size:.78em;color:var(--brand);font-weight:700;margin-bottom:.9em}
+h1.title{font-size:2.05em;line-height:1.42;margin:0 0 .35em;font-weight:800;letter-spacing:.01em}
+.subtitle{font-size:1.02em;color:var(--muted2);margin:0 0 1.2em}
+.badges{display:flex;flex-wrap:wrap;gap:.5em;margin-bottom:1.5em}
+.badge{background:#fff;border:1px solid var(--line);color:#43536b;border-radius:999px;padding:.2em .95em;font-size:.8em}
+.btnrow{display:flex;flex-wrap:wrap;gap:.8em;margin:0 0 2rem}
+.btn{display:inline-block;background:var(--brand);color:#fff!important;padding:.7em 1.9em;border-radius:8px;text-decoration:none;font-weight:600;font-size:.98em;transition:.15s}
+.btn:hover{background:var(--brand2)}
+.btn.ghost{background:#fff;color:var(--brand)!important;border:1px solid #c9d7e8}
+.btn.ghost:hover{border-color:var(--brand)}
+.hstat{display:flex;gap:2.2em;border-top:1px dashed var(--line);padding-top:1.1em}
+.hstat div b{display:block;font-size:1.25em;color:var(--ink)}
+.hstat div span{font-size:.8em;color:var(--muted2)}
+
+/* ── 价格 ─────────────────────────────── */
+.pricing{padding:2.6rem 0 3rem}
+.sec-head{text-align:center;margin:0 0 1.8rem}
+.sec-head h2{font-size:1.45em;margin:0 0 .3em;font-weight:800}
+.sec-head p{margin:0;color:var(--muted2);font-size:.92em}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;max-width:860px;margin:0 auto}
+.plan{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.6rem 1.7rem 1.4rem;position:relative;transition:.15s}
+.plan:hover{box-shadow:0 8px 26px rgba(20,35,60,.08);transform:translateY(-2px)}
+.plan.hot{border:1.6px solid var(--brand)}
+.plan .tag{position:absolute;top:-0.85em;left:1.5rem;background:var(--brand);color:#fff;font-size:.72em;border-radius:999px;padding:.18em 1em;letter-spacing:.12em}
+.plan h3{margin:0 0 .2em;font-size:1.05em}
+.plan .price{font-size:2em;font-weight:800;color:var(--brand);margin:.15em 0 .5em}
+.plan .price small{font-size:.45em;color:var(--muted2);font-weight:400}
+.plan ul{list-style:none;margin:0;padding:0;font-size:.9em;color:#3d4c5c}
+.plan li{padding:.22em 0;border-bottom:1px dashed #eef1f5}
+.plan li:last-child{border-bottom:none}
+.plan li::before{content:"✓";color:var(--brand);font-weight:700;margin-right:.5em}
+.buy-note{max-width:860px;margin:1.3rem auto 0;text-align:center;color:var(--muted2);font-size:.9em}
+.buy-note b{color:#c9281e}
+
+/* ── 目录 ─────────────────────────────── */
+.toc-section{padding:2.4rem 1.6rem 3rem;max-width:1060px;margin:0 auto}
+.toc-head{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 1.1rem}
+.toc-head h2{margin:0;font-size:1.3em;font-weight:800}
+.toc-head span{color:var(--muted2);font-size:.86em}
+.parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:.95rem}
+.part-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.3rem;transition:.15s}
+.part-card:hover{border-color:#c9d7e8;box-shadow:0 4px 16px rgba(31,78,121,.07)}
+.part-card h3{margin:0 0 .5em;font-size:.95em;color:var(--brand);border-bottom:2px solid #f0f4f9;padding-bottom:.35em}
+.part-card ul{list-style:none;margin:0;padding:0}
+.part-card li{padding:.24em 0;font-size:.89em;color:#3d4c5c}
+.part-card li a{color:var(--brand);text-decoration:none;font-weight:600}
+.part-card li a:hover{text-decoration:underline}
+.part-card li .free{background:#e8f6ee;color:#127a3d;font-size:.7em;border-radius:4px;padding:.08em .45em;margin-left:.45em}
+.part-card li .lock{color:#a6b2bd;font-size:.76em;margin-left:.45em}
+.app-card{grid-column:1/-1;background:#fbfcfd}
+.app-card li{display:inline-block;margin-right:1.2em}
+
+/* ── 页脚 ─────────────────────────────── */
+footer{border-top:1px solid var(--line);padding:1.8rem 0 2.4rem;text-align:center;color:var(--muted2);font-size:.85em}
+footer a{color:var(--brand);text-decoration:none}
+footer a:hover{text-decoration:underline}
+@media (max-width:840px){.hero-grid{grid-template-columns:1fr;gap:2.2rem;padding:2.6rem 0 2.2rem}.cover{max-width:300px;margin:0 auto}}
+</style></head><body>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"掩模版光学仿真与 die-to-database 缺陷检测","inLanguage":"zh-CN","author":{"@type":"Organization","name":"析微视觉实验室"},"bookFormat":"https://schema.org/EBook","numberOfPages":200,"description":"从波动光学基础到掩模参考图渲染仿真与缺陷检测算法的完整中文教程。","isAccessibleForFree":false,"offers":{"@type":"Offer","price":"59.9","priceCurrency":"CNY","availability":"https://schema.org/InStock"},"hasPart":{"@type":"Book","name":"免费试读版（前言+第1-4章）","isAccessibleForFree":true}}</script>
+<section class="hero"><div class="wrap hero-grid">
+  <div class="cover"><img src="cover.png" alt="《掩模版光学仿真与 die-to-database 缺陷检测》封面"></div>
+  <div>
+    <div class="kicker">半导体制造与检测技术系列教材</div>
+    <h1 class="title">掩模版光学仿真<br>与 die-to-database 缺陷检测</h1>
+    <p class="subtitle">从波动光学基础到参考图渲染仿真的完整教程 · 全部插图由真实仿真数据生成</p>
+    <div class="badges"><span class="badge">四篇 · 十九章</span><span class="badge">七个附录</span><span class="badge">Python / MATLAB 双语言代码</span><span class="badge">12 项数值验证</span><span class="badge">零基础友好</span></div>
+    <div class="btnrow">
+      <a class="btn" href="preface.html">开始免费试读</a>
+      <a class="btn ghost" href="#buy">获取完整版</a>
+      <a class="btn ghost" href="https://github.com/jiejin93/optic-textbook" target="_blank">GitHub 仓库</a>
+    </div>
+    <div class="hstat">
+      <div><b>19</b><span>正文章节</span></div>
+      <div><b>7</b><span>实用附录</span></div>
+      <div><b>12</b><span>项双语言验证测试</span></div>
+      <div><b>4 + 1</b><span>章免费试读</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="pricing wrap" id="buy">
+  <div class="sec-head"><h2>获取完整版</h2><p>添加作者微信购买，备注「光学教材」</p></div>
+  <div class="plans">
+    <div class="plan">
+      <h3>教材完整版</h3>
+      <div class="price">¥59.9</div>
+      <ul>
+        <li>四篇十九章 + 七附录，A4 排版 PDF</li>
+        <li>全部插图由真实仿真数据生成</li>
+        <li>每章：学习目标 → 逐步推导 → 小结 → 习题</li>
+        <li>免费更新后续勘误与修订版</li>
+      </ul>
+    </div>
+    <div class="plan hot">
+      <span class="tag">推荐</span>
+      <h3>教材 + 运行代码</h3>
+      <div class="price">¥99.9</div>
+      <ul>
+        <li>含「教材完整版」全部内容</li>
+        <li>opticsim Python 仿真库（纯 NumPy）</li>
+        <li>MATLAB +optix 工具箱（30 函数）</li>
+        <li>12 项验证测试 + 全部插图复现脚本</li>
+        <li>端到端 D2DB 流水线（Python / MATLAB）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="buy-note">试读满意再购买 · 扫码添加作者微信，备注 <b>光学教材</b></div>
+  <div style="text-align:center;margin-top:1.1rem">
+    <img src="wechat-qr.jpg" alt="作者微信二维码" style="width:168px;border-radius:10px;border:1px solid var(--line);box-shadow:0 4px 14px rgba(20,35,60,.10)">
+  </div>
+  <div class="buy-note" style="margin-top:1rem">姊妹篇《大模型：从 Transformer 到部署》见 <a href="https://jiejin93.github.io/llm-textbook/" target="_blank">LLM 教材站</a></div>
+</section>
+
+<section class="toc-section">
+  <div class="toc-head"><h2>完整目录</h2><span>绿色标记章节可免费试读</span></div>
+  <div class="parts"><div class="part-card"><h3>第一部分 · 基础篇</h3><ul><li><a href="preface.html">前言</a><span class="free">免费试读</span></li><li><a href="ch01.html">绪论：从一张掩模照片说起</a><span class="free">免费试读</span></li><li><a href="ch02.html">复数与波动的数学</a><span class="free">免费试读</span></li><li><a href="ch03.html">傅里叶分析</a><span class="free">免费试读</span></li><li><a href="ch04.html">线性系统、卷积与采样</a><span class="free">免费试读</span></li><li>电磁场与光的波动理论<span class="lock">完整版</span></li><li>光与物质相互作用<span class="lock">完整版</span></li><li>干涉与相干性<span class="lock">完整版</span></li><li>衍射理论<span class="lock">完整版</span></li></ul></div><div class="part-card"><h3>第二部分 · 成像理论篇</h3><ul><li>透镜作为傅里叶变换机<span class="lock">完整版</span></li><li>成像系统：PSF、OTF 与分辨率<span class="lock">完整版</span></li><li>部分相干成像：从阿贝到 Hopkins<span class="lock">完整版</span></li></ul></div><div class="part-card"><h3>第三部分 · 掩模光学仿真篇</h3><ul><li>掩模版工程与版图数据<span class="lock">完整版</span></li><li>仿真模块一：版图栅格化与薄掩模<span class="lock">完整版</span></li><li>仿真模块二：Abbe 源点成像引擎<span class="lock">完整版</span></li><li>仿真模块三：Hopkins 与 TCC 快速引擎<span class="lock">完整版</span></li><li>仿真模块四：厚掩模与矢量电磁仿真<span class="lock">完整版</span></li><li>仿真模块五：参考图渲染与设备标定<span class="lock">完整版</span></li></ul></div><div class="part-card"><h3>第四部分 · 应用篇</h3><ul><li>die-to-database 检测算法全流程<span class="lock">完整版</span></li><li>综合实战与工程化<span class="lock">完整版</span></li></ul></div><div class="part-card app-card"><h3>附录</h3><ul><li>A 公式速查 · B 术语对照 · C 参考文献 · D 习题解答 · E 实验指南 · F 数值实验 · G 调试手册<span class="lock">完整版</span></li></ul></div></div>
+</section>
+
+<footer>
+  <div class="wrap">© 析微视觉实验室 · 《掩模版光学仿真与 die-to-database 缺陷检测》 · <a href="https://github.com/jiejin93/optic-textbook">GitHub</a> · <a href="https://jiejin93.github.io/llm-textbook/">姊妹篇：大模型教材</a></div>
+</footer>
+</body></html>

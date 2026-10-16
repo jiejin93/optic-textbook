@@ -1,0 +1,129 @@
+<h1>第 4 章 线性系统、卷积与采样</h1>
+
+<div class="objectives"><strong>本章学习目标</strong>
+<ul>
+<li>理解线性空间不变（LSI）系统及其用脉冲响应/传递函数的完整刻画；</li>
+<li>掌握离散傅里叶变换（DFT/FFT）与连续变换的关系；</li>
+<li>深入理解采样定理与混叠，掌握仿真网格设计准则；</li>
+<li>理解周期延拓与卷绕误差，学会正确设置仿真窗口。</li>
+</ul></div>
+
+<h2>4.1 线性空间不变系统</h2>
+
+<p>一个系统 \(S\) 把输入函数 \(f(x)\) 变为输出 \(g(x)\)。若满足</p>
+$$ S\{\alpha f_1 + \beta f_2\} = \alpha S\{f_1\} + \beta S\{f_2\} \qquad\text{（线性：叠加原理）} $$
+$$ S\{f(x-x_0)\} = g(x-x_0) \qquad\text{（空间不变：平移输入只平移输出）} $$
+<p>则称为<strong>线性空间不变系统</strong>（LSI）。相干成像、非相干成像、线性滤波器都是 LSI 系统。</p>
+
+<p>LSI 系统有一个优美而实用的完整刻画。把任意输入分解为 δ 函数的叠加：</p>
+$$ f(x) = \int f(\xi)\,\delta(x-\xi)\,d\xi $$
+<p>记系统对原点脉冲的响应为 \(h(x) = S\{\delta(x)\}\)（<strong>脉冲响应</strong>，光学中称点扩散函数 PSF）。由空间不变性，对位于 \(\xi\) 的脉冲响应为 \(h(x-\xi)\)；再由线性，各脉冲响应加权叠加：</p>
+$$ \boxed{\ g(x) = \int f(\xi)\,h(x-\xi)\,d\xi = (f*h)(x)\ } $$
+<p>两边做傅里叶变换并用卷积定理：</p>
+$$ \boxed{\ G(f) = F(f)\,H(f)\ },\qquad H(f) = \mathcal{F}\{h(x)\} $$
+<p>\(H(f)\) 称为系统的<strong>传递函数</strong>：它逐频率地乘一个复数（模改变幅度、辐角移相位）。<strong>分析 LSI 系统的万能套路：空域卷积、频域乘法，两者等价</strong>。第 10 章将用这个框架把整个成像系统封装成两个函数：PSF 与传递函数。</p>
+
+<div class="box"><strong>例题 4-1</strong>　理想低通滤波器 \(H(f)=\mathrm{rect}(f/2B)\)（带限 \(B\)）的脉冲响应是什么？<br>
+<strong>解</strong>：\(h(x) = \int_{-B}^{B}e^{i2\pi fx}df = \frac{\sin(2\pi Bx)}{\pi x} = 2B\,\mathrm{sinc}(2Bx)\)。它无限长且有正负振荡——严格的"频域硬切"必然带来"空域振铃"。这正是相干成像光瞳（硬边）导致空间像边缘过冲的原因（第 10 章），也是数字图像处理中"振铃伪影"的根源。</div>
+
+<h2>4.2 从连续到离散：采样</h2>
+
+<p>计算机不能处理连续函数，只能存储采样值。以间隔 \(\Delta\) 采样 \(f\) 得到 \(f_s(x) = f(x)\,\sha(x)\)，其中梳状函数 \(\sha(x)=\sum_n\delta(x-n\Delta)\)。对采样函数做傅里叶变换（利用 δ 梳的变换仍是 δ 梳，间隔 \(1/\Delta\)，以及频域卷积）：</p>
+$$ F_s(f) = \frac{1}{\Delta}\sum_{m=-\infty}^{\infty} F\!\left(f - \frac{m}{\Delta}\right) $$
+<p><strong>采样使频谱以 \(1/\Delta\) 为周期无限复制</strong>。若原信号带宽 \(B \le \frac{1}{2\Delta}\)，各复制谱互不重叠，用低通滤波即可完整恢复原信号；若 \(B &gt; \frac{1}{2\Delta}\)，谱发生重叠，高频被"折叠"成低频假象，称为<strong>混叠</strong>（aliasing）。</p>
+
+<div class="box"><strong>奈奎斯特–香农采样定理</strong>：带限 \(B\) 的信号可由采样间隔 \(\Delta \le \frac{1}{2B}\) 的样本完全重建。\(\frac{1}{2\Delta}\) 称为奈奎斯特频率。</div>
+
+<figure>
+<svg viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Microsoft YaHei" font-size="12" fill="#25476a">
+<text x="165" y="18" text-anchor="middle">采样足够（Δ 小）：谱不重叠</text>
+<path d="M30,130 L90,60 L240,60 L300,130" fill="none" stroke="#25476a" stroke-width="2" transform="translate(0,0)"/>
+<path d="M30,130 L90,60 L150,60 L210,130 L270,200 L330,130 L390,60 L450,60 L510,130" fill="none" stroke="#b03a2e" stroke-width="1.4" stroke-dasharray="5 3" transform="translate(0,-8)"/>
+<text x="165" y="160" text-anchor="middle" fill="#5a6b7d">复制谱（虚线）与原谱（实线）分离</text>
+<line x1="360" y1="20" x2="640" y2="20" stroke="none"/>
+<text x="500" y="18" text-anchor="middle">采样不足（Δ 大）：混叠</text>
+<path d="M370,130 L430,60 L490,60 L550,130 L610,200 L670,130 L730,60" fill="none" stroke="#25476a" stroke-width="2"/>
+<path d="M330,130 L390,60 L450,60 L510,130 L570,200 L630,130" fill="none" stroke="#b03a2e" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="500" y="160" text-anchor="middle" fill="#b03a2e">谱尾部重叠 → 高频伪装成低频</text>
+</g>
+</svg>
+<figcaption>图 4-1 采样的频域视角：左，网格足够细，复制谱分离；右，网格太粗，复制谱重叠产生混叠。</figcaption>
+</figure>
+
+<h2>4.3 光学仿真的网格设计准则</h2>
+
+<p>成像仿真要在网格上表达"掩模 × 光瞳"的频域运算，网格必须同时容得下<strong>物的谱</strong>和<strong>系统的通带</strong>。由第 10 章可知，相干成像通带为 \(|f|\le NA/\lambda\)；部分相干照明下掩模谱还要平移 \(\sigma NA/\lambda\)，所需带宽约为 \((1+\sigma)NA/\lambda\)。留出余量：</p>
+
+<div class="box"><strong>网格准则（经验公式）</strong>
+$$ \Delta \le \frac{\lambda}{2(1+\sigma)NA}\quad(\text{理论}),\qquad
+\Delta \approx \frac{\lambda}{4\sim 8\ \text{倍}NA}\quad(\text{工程，取理论值的 } 1/2 \sim 1/4) $$
+<p>例：\(\lambda=266\) nm、\(NA=0.65\)、\(\sigma=0.8\) → 理论上限 114 nm，工程建议取 25–50 nm。</p></div>
+
+<p>网格太粗的症状：空间像出现不应有的周期纹理、边缘位置随网格相位抖动、与细网格参考结果不符。第 14 章的验证流程会把它作为固定检查项。</p>
+
+<h2>4.4 离散傅里叶变换（DFT）与 FFT</h2>
+
+<p>对 \(N\) 个样本 \(f[n]\)，离散傅里叶变换为</p>
+$$ F[k] = \sum_{n=0}^{N-1} f[n]\,e^{-i2\pi kn/N},\qquad k = 0,1,\dots,N-1 $$
+<p>DFT 可以看成"对采样信号再做周期截断"的结果：它隐含把 \(N\) 个样本当成<strong>一个周期</strong>，即</p>
+<div class="box"><strong>DFT 的两条隐含假设</strong>：① 输入是无限周期序列的一个周期（周期延拓）；② 频域同样离散且周期。<br>一切由 DFT 引起的仿真误差（卷绕、泄漏）都源自这两条假设与物理现实（非周期、连续）的冲突。</div>
+
+<p>频率轴的正确写法（Python，注意 fftshift 的配对使用）：</p>
+<pre><code>import numpy as np
+N, dx = 1024, 0.025            # 网格数与步长 (µm)
+fx = np.fft.fftshift(np.fft.fftfreq(N, d=dx))   # 居中频率轴: −20 … +20 µm⁻¹
+F  = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(f)))  # 谱居中</code></pre>
+
+<p>快速傅里叶变换（FFT）是计算 DFT 的 \(O(N\log N)\) 算法，与 DFT 结果完全一致。实输入的 DFT 满足共轭对称 \(F[N-k]=F^*[k]\)；带限内插公式（sinc 插值）可从样本重建连续函数——用于第 18 章的亚像素配准。</p>
+
+<h2>4.5 周期延拓与卷绕误差</h2>
+
+<p>DFT 计算卷积 \(g = f*h\) 时，实际算的是<strong>循环卷积</strong>：</p>
+$$ g_{circ}[n] = \sum_{m=0}^{N-1} f[m]\,h\!\left[(n-m)\bmod N\right] $$
+<p>如果 \(h\) 较长（PSF 有可观旁瓣），输出的左右边缘会把"该从窗口外进来的贡献"换成从对面绕回来的贡献——<strong>卷绕误差</strong>。对策：</p>
+
+<ol>
+<li><strong>加缓冲</strong>：仿真窗口比关心的图形区域每边多留数个 PSF 宽度（经验：≥ 2–3 个 Airy 斑半径，即 ≥ \(3\lambda/NA\) 量级）；</li>
+<li><strong>零填充（zero-padding）</strong>：FFT 前把数组补零到 2N，卷积后再裁剪；</li>
+<li><strong>分块渲染时重叠</strong>：相邻视场块之间重叠一个缓冲区，差分只用每块中心区域（第 18 章工程实践）。</li>
+</ol>
+
+<div class="box warn"><strong>仿真三大经典 bug</strong>：① 网格太粗 → 混叠（假周期条纹）；② 窗口太小 → 卷绕（边缘镜像干涉、图形"看到"相邻周期的复制）；③ fftshift/ifftshift 不配对 → 频率轴错位，光瞳偏心，像整体漂移。写任何仿真代码前，先用已知解析解（单缝、针孔）回归测试。</div>
+
+<h2>4.6 离散卷积与图像处理直觉</h2>
+
+<p>在图像上，卷积核滑过整幅图做加权求和是标准操作。几个有用直觉：</p>
+
+<ul>
+<li>核的<strong>积分</strong>决定直流增益：核和为 1 保持整体亮度，为 0（如拉普拉斯核）则把均匀区域变黑；</li>
+<li>核的<strong>宽度</strong>决定模糊程度：频域上对应低通宽度，符合"空域宽 = 频域窄"；</li>
+<li><strong>互相关核不翻转</strong>：模板匹配（配准）直接滑动求 \(\sum f(x)g(x+u)\)，与卷积差一个翻转，频域表现为 \(F^*G\) 而非 \(FG\)。</li>
+</ul>
+
+<pre><code># 循环卷绕演示：观察窗口不足的影响
+import numpy as np
+N = 256; x = (np.arange(N)-N/2)*0.02
+f = ((np.abs(x) &lt; 0.1)).astype(float)             # 窗口中央一个窄缝
+h = np.exp(-x**2/(2*0.3**2)); h /= h.sum()         # 很宽的模糊核
+g = np.fft.ifft(np.fft.fft(f)*np.fft.fft(h)).real  # 循环卷积（DFT 卷积）
+# 比较 g 与 scipy.signal.fftconvolve(f, h, mode='same')：两端差异即卷绕误差</code></pre>
+
+<h2>4.7 本章小结</h2>
+
+<ul>
+<li>LSI 系统 = 卷积（空域）/ 乘法（频域），由 PSF 与传递函数完整刻画。</li>
+<li>采样定理：\(\Delta \le 1/2B\)；光学仿真网格取 \(\lambda/[2(1+\sigma)NA]\) 的 1/2–1/4。</li>
+<li>DFT 隐含周期延拓：窗口加缓冲、必要时补零，防卷绕。</li>
+<li>fftshift/ifftshift 必须成对出现；用解析基准做回归测试。</li>
+</ul>
+
+<div class="exercises"><strong>习题 4</strong>
+<ol>
+<li>证明 LSI 系统输出公式 \(g = f*h\)（从 δ 分解出发写全推导）。</li>
+<li>频率 0.9/\(\Delta\) 的正弦条纹以 \(\Delta\) 采样后看起来是什么频率？解释"车轮倒转"现象。</li>
+<li>设计 λ=193 nm、NA=0.75、σ=0.6 系统的仿真网格与缓冲区，给出具体数值并说明理由。</li>
+<li>修改 4.6 节代码：把缝移到窗口边缘，观察卷绕误差如何变化；再补零到 4N 验证误差消失。</li>
+</ol></div>
+
+<p class="refs">参考：Oppenheim &amp; Willsky《Signals and Systems》；Goodman 第 2 章；NumPy FFT 文档。</p>

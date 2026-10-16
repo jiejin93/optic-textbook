@@ -1,0 +1,204 @@
+<h1>第 2 章 复数与波动的数学</h1>
+
+<div class="objectives"><strong>本章学习目标</strong>
+<ul>
+<li>熟练进行复数运算，理解复数作为"振幅 + 相位"载体的意义；</li>
+<li>掌握欧拉公式与复指数表示的简谐波；</li>
+<li>理解相位差、光程差的概念与计算；</li>
+<li>会用复数方法处理波的叠加（干涉的数学雏形）。</li>
+</ul></div>
+
+<h2>2.1 为什么光学需要复数</h2>
+
+<p>光是一种波动，而描述波动最自然的数学语言是复指数函数。原因很简单：波的基本行为是"相位随传播累积"，而复数乘法恰好就是"模相乘、辐角相加"。用复数表示波之后，透镜的相位延迟、光瞳的滤波、衍射的传播，全都变成简单的乘法。可以说<strong>复数是光学的母语</strong>；本章把这门语言学扎实，后面所有章节都会轻松许多。</p>
+
+<h2>2.2 复数回顾</h2>
+
+<p>复数 \(z = a + bi\)（其中 \(i^2 = -1\)）由实部 \(a = \mathrm{Re}\,z\) 和虚部 \(b = \mathrm{Im}\,z\) 构成。把它画在复平面上：横轴实部、纵轴虚部，复数就是平面上的一个点或向量。</p>
+
+<figure>
+<svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Microsoft YaHei" font-size="13" fill="#25476a">
+<line x1="40" y1="170" x2="390" y2="170" stroke="#5a6b7d" marker-end="url(#ax)"/>
+<line x1="200" y1="200" x2="200" y2="20" stroke="#5a6b7d" marker-end="url(#ay)"/>
+<defs>
+<marker id="ax" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#5a6b7d"/></marker>
+<marker id="ay" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#5a6b7d"/></marker>
+</defs>
+<line x1="200" y1="170" x2="330" y2="70" stroke="#25476a" stroke-width="2.4" marker-end="url(#av)"/>
+<defs><marker id="av" markerWidth="9" markerHeight="9" refX="2" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 z" fill="#25476a"/></marker></defs>
+<line x1="200" y1="170" x2="330" y2="170" stroke="#b03a2e" stroke-dasharray="5 3"/>
+<line x1="330" y1="170" x2="330" y2="70" stroke="#b03a2e" stroke-dasharray="5 3"/>
+<path d="M238,170 A42,42 0 0 1 226,143" fill="none" stroke="#5a6b7d"/>
+<text x="252" y="152" fill="#5a6b7d">φ = arg z</text>
+<text x="336" y="78">z = a+bi</text>
+<text x="336" y="176" fill="#b03a2e">a（实部）</text>
+<text x="248" y="62" fill="#b03a2e">b（虚部）</text>
+<text x="206" y="188">0</text>
+<text x="130" y="112">r = |z|</text>
+<text x="40" y="40" font-size="12" fill="#5a6b7d">虚轴</text>
+<text x="372" y="192" font-size="12" fill="#5a6b7d">实轴</text>
+</g>
+</svg>
+<figcaption>图 2-1 复数的几何表示：模 r 与辐角 φ。</figcaption>
+</figure>
+
+<p>由此得到复数的两种等价写法。代数式 \(z = a + bi\)，与<strong>极坐标式（指数式）</strong></p>
+$$ z = r\,(\cos\varphi + i\sin\varphi) = r\,e^{i\varphi},\qquad
+r = |z| = \sqrt{a^2+b^2},\qquad \tan\varphi = \frac{b}{a} $$
+<p>极坐标式的两个量在光学中各有专名：\(r\) 是<strong>模</strong>（振幅），\(\varphi\) 是<strong>辐角</strong>（相位）。</p>
+
+<h3>2.2.1 复数运算规则（务必熟练）</h3>
+
+<table>
+<tr><th>运算</th><th>代数式</th><th>指数式</th><th>几何意义</th></tr>
+<tr><td>加法</td><td>\((a+bi)+(c+di)=(a+c)+(b+d)i\)</td><td>—</td><td>向量相加（平行四边形法则）</td></tr>
+<tr><td>乘法</td><td>交叉相乘合并</td><td>\(r_1e^{i\varphi_1}\cdot r_2e^{i\varphi_2}=r_1r_2\,e^{i(\varphi_1+\varphi_2)}\)</td><td>模相乘，辐角相加</td></tr>
+<tr><td>共轭</td><td>\(z^* = a-bi\)</td><td>\((re^{i\varphi})^* = re^{-i\varphi}\)</td><td>关于实轴镜像</td></tr>
+<tr><td>模方</td><td>\(|z|^2 = a^2+b^2\)</td><td>\(zz^* = r^2\)</td><td>向量长度的平方</td></tr>
+<tr><td>除法</td><td>分子分母同乘分母共轭</td><td>\(\frac{r_1e^{i\varphi_1}}{r_2e^{i\varphi_2}} = \frac{r_1}{r_2}e^{i(\varphi_1-\varphi_2)}\)</td><td>模相除，辐角相减</td></tr>
+</table>
+
+<p>几个高频使用的恒等式：</p>
+$$ |z_1z_2| = |z_1||z_2|,\qquad |z^*| = |z|,\qquad z + z^* = 2\,\mathrm{Re}\,z,\qquad
+\mathrm{Re}\{z_1z_2^*\} = \text{两向量点积的 } r_1 r_2 \text{ 倍} $$
+
+<h3>2.2.2 欧拉公式</h3>
+
+<p>联系两种表示的核心是欧拉公式（可由 \(e^x\)、\(\sin\)、\(\cos\) 的泰勒级数直接比较得到）：</p>
+$$ e^{i\varphi} = \cos\varphi + i\sin\varphi,\qquad
+e^{-i\varphi} = \cos\varphi - i\sin\varphi $$
+<p>两式相加/相减立即得到：</p>
+$$ \cos\varphi = \frac{e^{i\varphi}+e^{-i\varphi}}{2},\qquad
+\sin\varphi = \frac{e^{i\varphi}-e^{-i\varphi}}{2i} $$
+<p>特别地，\(e^{i\pi} = -1\)，\(e^{i\pi/2} = i\)，\(e^{i2\pi}=1\)。相位每增加 \(2\pi\)，复数转一整圈回到原位——这就是"相位以 \(2\pi\) 为周期"的原因。</p>
+
+<div class="box"><strong>例题 2-1</strong>　计算 \((1+i)^4\)。<br>
+<strong>解</strong>：\(1+i = \sqrt{2}\,e^{i\pi/4}\)，故 \((1+i)^4 = (\sqrt{2})^4 e^{i\pi} = 4\times(-1) = -4\)。用代数式逐次平方可验证：\((1+i)^2 = 2i\)，\((2i)^2 = -4\)。</div>
+
+<h2>2.3 简谐振动与波的描述</h2>
+
+<p>取一根弦上的一点，它随时间做简谐振动：位移 \(u(t) = A\cos(\omega t + \varphi_0)\)。这里 \(A\) 是振幅，\(\omega = 2\pi\nu\) 是角频率（rad/s），\(\nu\) 是频率（Hz），\(\varphi_0\) 是初相位。周期 \(T = 2\pi/\omega = 1/\nu\)。</p>
+
+<p>波 = 振动在空间中的传播。沿 \(x\) 方向传播的<strong>平面简谐波</strong>：</p>
+$$ u(x,t) = A\cos(kx - \omega t + \varphi_0) $$
+
+<ul>
+<li>\(k = 2\pi/\lambda\) 称为<strong>波数</strong>（rad/m），\(\lambda\) 是波长：空间中相位差 \(2\pi\) 的两点相距一个波长；</li>
+<li>等相位面 \(kx-\omega t+\varphi_0 = \text{const}\) 以速度 \(v = \omega/k = \lambda\nu\) 向 \(+x\) 方向移动，\(v\) 就是波的相速度；</li>
+<li>固定时间看（\(t\) 不变）：\(u\) 是空间的余弦条纹；固定位置看（\(x\) 不变）：\(u\) 是时间的余弦振荡。</li>
+</ul>
+
+<figure>
+<svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Microsoft YaHei" font-size="13" fill="#25476a">
+<line x1="40" y1="110" x2="610" y2="110" stroke="#8fa8c4"/>
+<path d="M40,110 C55,50 70,50 85,110 C100,170 115,170 130,110 C145,50 160,50 175,110 C190,170 205,170 220,110 C235,50 250,50 265,110 C280,170 295,170 310,110 C325,50 340,50 355,110 C370,170 385,170 400,110 C415,50 430,50 445,110 C460,170 475,170 490,110 C505,50 520,50 535,110 C550,170 565,170 580,110" fill="none" stroke="#25476a" stroke-width="2.2"/>
+<line x1="85" y1="110" x2="130" y2="110" stroke="#b03a2e" stroke-width="2"/>
+<text x="107" y="136" fill="#b03a2e" font-size="12" text-anchor="middle">λ</text>
+<line x1="40" y1="76" x2="40" y2="110" stroke="#5a6b7d" stroke-dasharray="4 3"/>
+<text x="20" y="95" font-size="12">A</text>
+<text x="612" y="130" font-size="12">x</text>
+<text x="470" y="40" font-size="12" fill="#5a6b7d">u(x) = A cos(kx − ωt + φ₀)，t 固定</text>
+</g>
+</svg>
+<figcaption>图 2-2 某一时刻的波形：相邻波峰间距为波长 λ，波峰高度为振幅 A。</figcaption>
+</figure>
+
+<h2>2.4 复数表示的波：复振幅的引入</h2>
+
+<p>对单色波（\(\omega\) 固定），实数表达式里的三角函数运算非常繁琐。利用欧拉公式，把余弦写成复指数的实部：</p>
+$$ u(x,t) = A\cos(kx-\omega t+\varphi_0)
+= \mathrm{Re}\Big\{ A\,e^{i(kx-\omega t+\varphi_0)} \Big\}
+= \mathrm{Re}\Big\{ \underbrace{A\,e^{i(kx+\varphi_0)}}_{\text{复振幅 } \tilde{u}(x)}\; e^{-i\omega t} \Big\} $$
+
+<p>关键观察：<strong>时间因子 \(e^{-i\omega t}\} 对单色波处处相同，与它相比，不同位置、不同路径的波只在空间因子 \(Ae^{i(kx+\varphi_0)}\) 上有差别</strong>。于是干脆丢掉时间因子，只用空间复数携带信息：</p>
+
+<div class="box">
+<strong>复振幅（complex amplitude）</strong>：
+$$ \tilde{u}(x,y,z) = A(x,y,z)\,e^{i\varphi(x,y,z)} $$
+模 \(A\) 描述各点振动的强弱，辐角 \(\varphi\) 描述各点振动的相位。整个波动光学（衍射、干涉、成像）都在复振幅层面进行，最后一步才转换成可测量的光强。
+</div>
+
+<p>举例：振幅 2、相位 \(\pi/3\) 的波写作 \(\tilde u = 2e^{i\pi/3} = 1 + \sqrt{3}\,i\)。若它再经过一段路径使相位增加 \(\Delta\varphi\)、振幅衰减为原来的 \(T\) 倍，则新复振幅为 \(T\,\tilde u\, e^{i\Delta\varphi}\)——一次乘法完成。</p>
+
+<h3>2.4.1 相位与光程</h3>
+
+<p>光在折射率为 \(n\) 的介质中传播距离 \(s\)，相位累积为</p>
+$$ \Delta\varphi = k\,n\,s = \frac{2\pi}{\lambda}\,\underbrace{(ns)}_{\text{光程 OPD}} $$
+<p>其中 \(\lambda\) 为真空波长，\(ns\) 称为<strong>光程</strong>（optical path length）。相位由光程决定，而不是几何路程——这是第 6 章薄膜干涉和相移掩模的直接基础。</p>
+
+<div class="box warn"><strong>符号约定警告</strong>：本书采用 \(e^{-i\omega t}\) 时间约定，此时平面波空间因子为 \(e^{+i\mathbf{k}\cdot\mathbf{r}}\)，"相位超前"对应辐角变大。有的教材采用 \(e^{+i\omega t}\)，则符号全部反号。<strong>在一套代码里混用两种约定是初学者最隐蔽的错误来源</strong>：单独看每个公式都"能跑"，但组合起来传播方向或离焦符号就是反的。写仿真前先固定约定并在代码注释中声明。</div>
+
+<h2>2.5 用复振幅处理波的叠加</h2>
+
+<p>两列同频率的波在某点相遇，各自的复振幅为 \(\tilde u_1 = A_1e^{i\varphi_1}\)、\(\tilde u_2 = A_2e^{i\varphi_2}\)。真实的瞬时场是</p>
+$$ u(t) = \mathrm{Re}\{(\tilde u_1 + \tilde u_2)e^{-i\omega t}\} = A\cos(\omega t - \Phi) $$
+<p>即合成波仍是同频简谐波，其复振幅就是<strong>复振幅的直接相加</strong> \(\tilde u = \tilde u_1 + \tilde u_2\)。用相量图（复平面上的向量加法）计算最直观：</p>
+
+$$ A^2 = |\tilde u_1 + \tilde u_2|^2 = A_1^2 + A_2^2 + 2A_1A_2\cos(\varphi_2-\varphi_1) $$
+
+<p>合成强度不等于两波强度之和，多出的交叉项 \(2A_1A_2\cos\Delta\varphi\) 就是<strong>干涉项</strong>：</p>
+
+<ul>
+<li>\(\Delta\varphi = 2m\pi\)（同相）：\(A = A_1+A_2\)，相长干涉；</li>
+<li>\(\Delta\varphi = (2m+1)\pi\)（反相）：\(A = |A_1-A_2|\)，相消干涉；</li>
+<li>等振幅时 \(A=2A_1\cos(\Delta\varphi/2)\)，强度在 \(0\) 与 \(4A_1^2\) 之间变化。</li>
+</ul>
+
+<figure>
+<svg viewBox="0 0 640 170" xmlns="http://www.w3.org/2000/svg">
+<g font-family="Microsoft YaHei" font-size="12" fill="#25476a">
+<line x1="30" y1="120" x2="330" y2="120" stroke="#8fa8c4"/>
+<line x1="30" y1="120" x2="130" y2="50" stroke="#25476a" stroke-width="2.2" marker-end="url(#p1)"/>
+<line x1="130" y1="50" x2="230" y2="120" stroke="#b03a2e" stroke-width="2.2" marker-end="url(#p2)"/>
+<line x1="30" y1="120" x2="230" y2="120" stroke="#5a6b7d" stroke-width="2" stroke-dasharray="6 3"/>
+<text x="70" y="72">u₁（A₁, φ₁）</text><text x="185" y="72" fill="#b03a2e">u₂（A₂, φ₂）</text>
+<text x="125" y="140" fill="#5a6b7d">合成 u = u₁ + u₂（虚线）</text>
+<text x="390" y="40">同相叠加 Δφ=0：A = A₁+A₂（最长）</text>
+<text x="390" y="80">反相叠加 Δφ=π：A = |A₁−A₂|（最短）</text>
+<text x="390" y="120">一般情形：余弦定理给出合成振幅</text>
+<text x="390" y="150" fill="#5a6b7d">A² = A₁² + A₂² + 2A₁A₂cosΔφ</text>
+</g>
+<defs>
+<marker id="p1" markerWidth="8" markerHeight="8" refX="2" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 z" fill="#25476a"/></marker>
+<marker id="p2" markerWidth="8" markerHeight="8" refX="2" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 z" fill="#b03a2e"/></marker>
+</defs>
+</svg>
+<figcaption>图 2-3 相量图：复振幅相加 = 复平面上的向量加法，合成模由余弦定理决定。</figcaption>
+</figure>
+
+<div class="box"><strong>例题 2-2</strong>　三束等幅光 \(\tilde u_m = A_0e^{im\delta}\)（\(m=0,1,2\)，相邻相位差 \(\delta\)）叠加，求合成强度。<br>
+<strong>解</strong>：这是三光束干涉（第 7 章光栅衍射的原型）。
+$$ \tilde u = A_0(1 + e^{i\delta} + e^{i2\delta}) = A_0\,e^{i\delta}\frac{\sin(3\delta/2)}{\sin(\delta/2)},\qquad
+I = A_0^2\left[\frac{\sin(3\delta/2)}{\sin(\delta/2)}\right]^2 $$
+当 \(\delta = 2\pi/3\) 时三项之和为零——三束光可以完全相消。这正是相移掩模（第 12 章）利用的原理之一。</div>
+
+<h2>2.6 光强：从复振幅到可观测量</h2>
+
+<p>光的频率约 \(10^{14}\) Hz，没有任何探测器能直接跟踪如此快的振荡，所有探测器（眼睛、光电二极管、检测机相机）响应的都是能量的时间平均。定义光强：</p>
+$$ I = \langle u^2(t)\rangle_t = \frac{1}{2}A^2 \;\propto\; |\tilde u|^2 = \tilde u\,\tilde u^* $$
+<p>仿真的输出永远是光强；从复振幅到光强这一步是"取模方"，<strong>实部和虚部都参与</strong>：</p>
+$$ |\tilde u|^2 = (\mathrm{Re}\,\tilde u)^2 + (\mathrm{Im}\,\tilde u)^2 $$
+
+<div class="box warn"><strong>常见错误</strong>：把 \(\mathrm{Re}\,\tilde u\)、\(\tilde u\)、\(|\tilde u|\)、\(|\tilde u|^2\) 混为一谈。正确关系链：实瞬时场 = \(\mathrm{Re}\{\tilde u e^{-i\omega t}\}\)；复振幅 = \(\tilde u\)；振幅 = \(|\tilde u|\)；<strong>光强 = \(|\tilde u|^2\)</strong>。差一个平方，边缘位置、对比度结论全错。</div>
+
+<h2>2.7 本章小结</h2>
+
+<ul>
+<li>复数 \(re^{i\varphi}\)：模管大小、辐角管角度；乘法 = 模相乘、辐角相加。</li>
+<li>复振幅 \(\tilde u = Ae^{i\varphi}\) 是单色波的空间完整描述；探测器测量 \(|\tilde u|^2\)。</li>
+<li>相位累积 = \(2\pi \times\) 光程/\(\lambda\)；光程 = \(n \times\) 几何路程。</li>
+<li>波的叠加 = 复振幅相加；干涉项 \(2A_1A_2\cos\Delta\varphi\) 是所有成像反差的来源。</li>
+</ul>
+
+<div class="exercises"><strong>习题 2</strong>
+<ol>
+<li>把下列复数写成 \(re^{i\varphi}\) 形式：\(3+4i\)；\(-1+i\)；\(\sqrt{3}-i\)；纯虚数 \(5i\)。</li>
+<li>证明 \(|z_1+z_2|^2 + |z_1-z_2|^2 = 2(|z_1|^2+|z_2|^2)\)，并说明它在相量图上对应平行四边形的什么性质。</li>
+<li>两束光光强比为 4:1，相位差 \(90^\circ\)，求合成光强与最大可能光强之比。</li>
+<li>光垂直穿过厚 \(t\)、折射率 \(n\) 的玻璃板，相对同样厚度的空气，相位多累积多少？若 \(\lambda=266\) nm、\(n=1.52\)、\(t=130\) nm，该值是多少 rad？</li>
+<li>编写 Python 函数，输入若干复振幅列表，返回合成光强；用它数值验证习题 3。</li>
+</ol></div>
+
+<p class="refs">参考：Hecht《Optics》第 2 章；Goodman《Introduction to Fourier Optics》第 2 章。</p>
