@@ -1,66 +1,130 @@
+/* trial 阅读页样式 · 简白专业版（与首页同一设计语言） */
 :root {
-  --fg: #22303c; --bg: #ffffff; --muted: #64748b;
-  --accent: #1f4e79; --accent2: #a63d2f;
-  --box: #f4f8fb; --border: #d8e2ea; --rule: #b9c8d4;
+  --fg: #26282b; --bg: #ffffff; --muted: #6b7a89;
+  --accent: #1f4e79; --accent2: #a63d2f; --brand2: #2d6bb2;
+  --box: #f4f8fb; --border: #e7ebf0; --rule: #dbe3ea; --side: #f9fbfc;
 }
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
   font-family: "Microsoft YaHei", "Noto Sans SC", "PingFang SC", sans-serif;
   color: var(--fg); background: var(--bg); margin: 0;
-  line-height: 1.95; font-size: 15.5px;
+  line-height: 2.05; font-size: 16px; letter-spacing: .2px;
 }
-.layout { display: flex; max-width: 1180px; margin: 0 auto; }
-nav.toc {
-  width: 272px; flex: none; padding: 28px 16px; position: sticky; top: 0;
-  height: 100vh; overflow-y: auto; border-right: 1px solid var(--border);
-  font-size: 13.5px; scrollbar-width: thin; background: #fafcfe;
-}
-nav.toc .title { font-weight: 700; font-size: 15px; margin-bottom: 14px; color: var(--accent);
-                 letter-spacing: 1px; }
-nav.toc a { display: block; padding: 4px 10px; color: var(--fg); text-decoration: none;
-            border-radius: 5px; border-left: 2px solid transparent; }
-nav.toc a:hover { background: var(--box); }
-nav.toc a.active { background: var(--box); color: var(--accent); font-weight: 700;
-                   border-left-color: var(--accent); }
-nav.toc .part { font-weight: 700; color: var(--accent2); margin: 14px 0 5px; padding-left: 10px;
-                border-bottom: 1px solid var(--rule); padding-bottom: 3px; letter-spacing: 1px; }
-main { flex: 1; padding: 44px 58px; max-width: 860px; }
 
-h1 { font-size: 1.65em; color: var(--accent); font-weight: 700;
-     padding-bottom: 0.35em; border-bottom: 1.5px solid var(--rule); margin: 0.8em 0 1.1em; }
-h2 { font-size: 1.26em; color: var(--accent); font-weight: 700; margin: 1.9em 0 0.8em; }
-h2::before { content: ""; display: inline-block; width: 0.55em; height: 1em;
-             margin-right: 0.5em; vertical-align: -0.12em;
-             background: linear-gradient(180deg, var(--accent) 0 35%, transparent 35%); }
-h3 { font-size: 1.08em; color: #33475b; margin: 1.5em 0 0.5em; }
-p { margin: 0.65em 0; text-align: justify; }
-table { border-collapse: collapse; margin: 1.2em auto; font-size: 0.9em; }
-th, td { border: none; border-bottom: 1px solid var(--rule); padding: 6px 12px;
+/* ── 布局骨架 ─────────────────────────── */
+.layout { display: flex; max-width: 1200px; margin: 0 auto; }
+main { flex: 1; padding: 44px 60px 40px; max-width: 840px; min-width: 0; }
+
+/* ── 侧栏：书籍名片 + 章节 ─────────────── */
+nav.toc {
+  width: 280px; flex: none; padding: 26px 18px; position: sticky; top: 0;
+  height: 100vh; overflow-y: auto; border-right: 1px solid var(--border);
+  font-size: 13.5px; scrollbar-width: thin; background: var(--side);
+}
+nav.toc .book { display: flex; gap: 12px; align-items: center; text-decoration: none;
+  margin-bottom: 20px; padding: 6px; border-radius: 10px; }
+nav.toc .book:hover { background: #eef3f8; }
+nav.toc .book img { width: 54px; border-radius: 4px; flex: none;
+  box-shadow: 0 3px 10px rgba(20,35,60,.22); }
+nav.toc .book .bt { color: var(--fg); font-weight: 700; line-height: 1.5; font-size: 13.5px; }
+nav.toc .book .bt small { display: block; color: var(--muted); font-weight: 400;
+  font-size: .82em; margin-top: 2px; letter-spacing: .08em; }
+nav.toc .part { font-weight: 700; color: var(--muted); margin: 16px 0 5px; padding-left: 10px;
+  font-size: .82em; letter-spacing: .25em; }
+nav.toc a { display: block; padding: 4.5px 10px; color: var(--fg); text-decoration: none;
+  border-radius: 6px; border-left: 2px solid transparent; line-height: 1.6; }
+nav.toc a:hover { background: #eef3f8; }
+nav.toc a.active { background: #e9f0f7; color: var(--accent); font-weight: 700;
+  border-left-color: var(--accent); }
+nav.toc a.ext { color: var(--accent); }
+nav.toc a.ext::after { content: " →"; }
+
+/* ── 移动端顶栏 ───────────────────────── */
+.mobile-top { display: none; }
+
+/* ── 试读横幅 ─────────────────────────── */
+.trial-banner { background: #fff8ec; border: 1px solid #f0e2c5; border-radius: 8px;
+  padding: .55em 1.1em; margin: 0 0 2em; font-size: .86em; color: #6d5a33; }
+.trial-banner a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.trial-banner a:hover { text-decoration: underline; }
+
+/* ── 正文排版 ─────────────────────────── */
+h1 { font-size: 1.7em; color: var(--fg); font-weight: 800; line-height: 1.45;
+     padding-bottom: .4em; border-bottom: 1px solid var(--border); margin: .7em 0 1.2em;
+     letter-spacing: .01em; }
+h2 { font-size: 1.28em; color: var(--fg); font-weight: 700; margin: 2em 0 .8em;
+     letter-spacing: .01em; }
+h2::before { content: ""; display: inline-block; width: 4px; height: .95em;
+             margin-right: .5em; vertical-align: -0.1em; border-radius: 2px;
+             background: var(--accent); }
+h3 { font-size: 1.08em; color: #33475b; margin: 1.6em 0 .5em; font-weight: 700; }
+p { margin: .7em 0; text-align: justify; }
+strong { color: #17212e; }
+
+/* ── 表格：纯细线 ─────────────────────── */
+table { border-collapse: collapse; margin: 1.3em auto; font-size: .9em; width: auto; }
+th, td { border: none; border-bottom: 1px solid var(--rule); padding: 7px 14px;
          text-align: left; vertical-align: top; }
-tr:first-child th { border-top: 1.5px solid var(--accent); border-bottom: 1.2px solid var(--accent);
+tr:first-child th { border-top: 2px solid var(--accent); border-bottom: 1.5px solid var(--accent);
                     color: var(--accent); background: none; }
+
+/* ── 提示框：细边线 + 极浅底 ───────────── */
 .box, .box.key, .box.warn {
   background: var(--box); border: none; border-left: 3px solid var(--accent);
-  padding: 12px 18px; margin: 1.2em 0;
+  border-radius: 0 8px 8px 0; padding: 12px 18px; margin: 1.3em 0; color: #33414f;
 }
-.box.warn { border-left-color: var(--accent2); background: #faf4f2; }
-.objectives { border-top: 2px solid var(--accent); padding-top: 8px; margin: 0 0 1.4em;
-              color: #33475b; background: none; }
+.box.warn { border-left-color: var(--accent2); background: #faf5f3; }
+.objectives { border-top: 2px solid var(--accent); padding-top: 10px; margin: 0 0 1.6em;
+              color: #33414f; background: none; }
 .objectives strong { color: var(--accent); }
-.exercises { border-top: 1px solid var(--rule); margin-top: 1.8em; padding-top: 0.9em; }
-.refs, .refs li { font-size: 0.88em; color: var(--muted); }
-code { font-family: Consolas, "Cascadia Code", monospace; font-size: 0.86em;
-       background: #f2f5f8; border-radius: 3px; padding: 1px 5px; }
-pre { background: #f6f8fa; border: 1px solid var(--border); border-left: 3px solid var(--border);
-      border-radius: 5px; padding: 12px 16px; overflow-x: auto; line-height: 1.55; }
-pre code { background: none; padding: 0; font-size: 0.85em; }
-figure { text-align: center; margin: 1.5em auto; }
+.exercises { border-top: 1px solid var(--rule); margin-top: 2em; padding-top: 1em; }
+.refs, .refs li { font-size: .88em; color: var(--muted); }
+
+/* ── 代码 ─────────────────────────────── */
+code { font-family: Consolas, "Cascadia Code", monospace; font-size: .86em;
+       background: #f2f5f8; border-radius: 4px; padding: 1px 5px; }
+pre { background: #f7f9fb; border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px 18px; overflow-x: auto; line-height: 1.6; }
+pre code { background: none; padding: 0; font-size: .85em; }
+
+/* ── 图 ───────────────────────────────── */
+figure { text-align: center; margin: 1.6em auto; }
 figure svg { max-width: 92%; height: auto; }
-figcaption { font-size: 0.85em; color: var(--muted); margin-top: 6px; padding-top: 4px;
-             border-top: 1px solid var(--rule); display: inline-block; max-width: 86%; }
-.pager { display: flex; justify-content: space-between; margin-top: 52px; padding-top: 14px;
-         border-top: 1px solid var(--rule); }
-.pager a { color: var(--accent); text-decoration: none; }
+figcaption { font-size: .85em; color: var(--muted); margin-top: 8px; padding-top: 6px;
+             border-top: 1px solid var(--rule); display: inline-block; max-width: 86%; line-height: 1.7; }
+
+/* ── 公式：超宽可横向滚动 ──────────────── */
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: 3px 2px; margin: 1.15em 0; }
+
+/* ── 翻页卡 ───────────────────────────── */
+.pager { display: flex; justify-content: space-between; gap: 14px; margin-top: 56px; }
+.pager a { flex: 1; color: var(--fg); text-decoration: none; border: 1px solid var(--border);
+           border-radius: 10px; padding: 10px 16px; transition: .15s; min-width: 0; }
+.pager a:hover { border-color: var(--accent); box-shadow: 0 3px 12px rgba(31,78,121,.08); }
+.pager a span { display: block; font-size: .78em; color: var(--muted); letter-spacing: .1em; }
+.pager a b { font-weight: 600; font-size: .95em; }
+.pager a:last-child { text-align: right; }
 .sign { text-align: right; margin-top: 2em; }
-.katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
-@media (max-width: 900px) { nav.toc { display: none; } main { padding: 20px; } }
+
+/* ── 页脚 ─────────────────────────────── */
+.colophon { margin-top: 54px; padding-top: 18px; border-top: 1px solid var(--border);
+            text-align: center; color: var(--muted); font-size: .84em; }
+.colophon a { color: var(--accent); text-decoration: none; }
+.colophon a:hover { text-decoration: underline; }
+
+/* ── 移动端 ───────────────────────────── */
+@media (max-width: 900px) {
+  nav.toc { display: none; }
+  main { padding: 20px 20px 32px; }
+  .mobile-top { display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 9; background: #ffffffee; backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border); padding: 10px 16px; }
+  .mobile-top .mt-title { color: var(--fg); font-weight: 700; font-size: 14px;
+    text-decoration: none; }
+  .mobile-top .mt-home { color: var(--accent); font-weight: 600; font-size: 13.5px;
+    text-decoration: none; border: 1px solid var(--border); border-radius: 999px;
+    padding: 3px 12px; background: #fff; }
+  .pager { flex-direction: column; }
+  .pager a:last-child { text-align: left; }
+}
