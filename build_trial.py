@@ -27,10 +27,11 @@ FULL_TITLE["ch02.html"] = "第 2 章 复数与波动的数学"
 FULL_TITLE["ch03.html"] = "第 3 章 傅里叶分析"
 FULL_TITLE["ch04.html"] = "第 4 章 线性系统、卷积与采样"
 
-KATEX = """<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
- onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\\\(',right:'\\\\)',display:false}],throwOnError:false});"></script>"""
+KATEX = """<link rel="stylesheet" href="assets/katex/katex.min.css">
+<script defer src="assets/katex/katex.min.js"></script>
+<script defer src="assets/katex/contrib/auto-render.min.js"
+ onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\\\(',right:'\\\\)',display:false}],throwOnError:false});"></script>
+<script defer src="javascripts/katex-init.js"></script>"""
 
 PAGE = """<!DOCTYPE html>
 <html lang="zh-CN">
