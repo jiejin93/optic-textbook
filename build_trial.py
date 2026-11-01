@@ -51,13 +51,12 @@ PAGE = """<!DOCTYPE html>
 {nav}
 <div class="part">完整版</div>
 <a class="ext" href="index.html#buy">获取完整版</a>
-<a class="ext" href="{repo}" target="_blank">GitHub 仓库</a>
 </nav>
 <main>
-<div class="trial-banner">📚 免费试读：前言 + 第 1–4 章 · 完整版（四篇十九章 + 七附录，另有教材+运行代码版本）见 <a href="{repo}" target="_blank">GitHub 仓库</a> 或 <a href="index.html#buy">定价页</a></div>
+<div class="trial-banner">📚 免费试读：前言 + 第 1–4 章 · 完整版（四篇十九章 + 七附录，另有教材+运行代码版本）见 <a href="index.html#buy">定价页</a></div>
 {body}
 <div class="pager">{prev}{next}</div>
-<footer class="colophon">© 析微视觉实验室 · <a href="index.html">返回目录与定价</a> · <a href="{repo}" target="_blank">GitHub</a></footer>
+<footer class="colophon">© 析微视觉实验室 · <a href="index.html">返回目录与定价</a></footer>
 </main>
 </div>
 </body>
